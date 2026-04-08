@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Командный Центр</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Didact+Gothic&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#191919;display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:hidden;padding:24px}
+  .header{
+    width:100%;padding:64px 48px 56px;border-radius:16px;text-align:center;position:relative;
+    background:linear-gradient(135deg,rgba(30,26,20,0.9) 0%,rgba(42,36,26,0.8) 40%,rgba(30,26,20,0.9) 100%);
+    border:1px solid rgba(212,168,85,0.08);overflow:hidden;
+  }
+  .header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(212,168,85,0.08) 0%,transparent 55%)}
+  .header::after{content:'';position:absolute;bottom:0;left:6%;right:6%;height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,85,0.2),transparent)}
+  .title{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:400;letter-spacing:14px;color:rgba(212,168,85,0.75);text-transform:uppercase;position:relative}
+  .sub{font-family:'Didact Gothic',sans-serif;font-size:15px;letter-spacing:6px;color:rgba(180,175,165,0.3);text-transform:uppercase;margin-top:16px;position:relative}
+  .line{width:100px;height:1px;margin:20px auto 0;background:linear-gradient(90deg,transparent,rgba(212,168,85,0.25),transparent);position:relative}
+  .desc{font-family:'Didact Gothic',sans-serif;font-size:13px;letter-spacing:4px;color:rgba(180,175,165,0.22);text-transform:uppercase;margin-top:16px;position:relative}
+  .p{position:absolute;width:1.5px;height:1.5px;border-radius:50%;background:rgba(212,168,85,0.15);animation:fl linear infinite;pointer-events:none}
+  .p1{top:18%;left:10%;animation-duration:8s}.p2{top:60%;right:12%;animation-duration:6s;animation-delay:1s}
+  .p3{top:22%;right:8%;animation-duration:10s;animation-delay:2s}.p4{bottom:18%;left:22%;animation-duration:7s;animation-delay:3s}
+  .p5{top:35%;left:45%;animation-duration:9s;animation-delay:4s}.p6{bottom:30%;right:30%;animation-duration:11s;animation-delay:1.5s}
+  @keyframes fl{0%{transform:translateY(0);opacity:0}20%{opacity:0.35}80%{opacity:0.1}100%{transform:translateY(-35px);opacity:0}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="p p1"></div><div class="p p2"></div><div class="p p3"></div><div class="p p4"></div><div class="p p5"></div><div class="p p6"></div>
+  <div class="title">Командный Центр</div>
+  <div class="sub">Agent Universe · Панель управления</div>
+  <div class="line"></div>
+  <div class="desc">5 колец · 43+ агентов · 3 фабрики · Триумвират</div>
+</div>
+</body>
+</html>
