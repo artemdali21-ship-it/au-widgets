@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finance Widget · Agent Universe</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+  
+  :root {
+    --bg: #191919;
+    --card: rgba(255,255,255,0.03);
+    --card-hover: rgba(255,255,255,0.06);
+    --border: rgba(76,175,80,0.15);
+    --border-hover: rgba(76,175,80,0.35);
+    --green: #4CAF50;
+    --green-dim: rgba(76,175,80,0.5);
+    --green-faint: rgba(76,175,80,0.08);
+    --red: #EF5350;
+    --red-dim: rgba(239,83,80,0.5);
+    --text: rgba(200,200,195,0.8);
+    --text-dim: rgba(200,200,195,0.4);
+    --text-bright: rgba(240,240,235,0.9);
+  }
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    padding: 16px 0;
+  }
+  
+  .widget {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 4px;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .header-left { display: flex; align-items: center; gap: 10px; }
+  
+  .pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; box-shadow: 0 0 0 0 rgba(76,175,80,0.4); }
+    50% { opacity: 1; box-shadow: 0 0 8px 2px rgba(76,175,80,0.2); }
+  }
+  
+  .header-title {
+    font-size: 11px; font-weight: 500; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--green-dim);
+  }
+  
+  .header-right { text-align: right; }
+  .header-month { font-size: 10px; color: var(--text-dim); letter-spacing: 1px; }
+  .header-updated { font-size: 8px; color: rgba(200,200,195,0.2); letter-spacing: 1px; margin-top: 2px; }
+  
+  /* Goal bar */
+  .goal-row {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 18px; opacity: 0;
+    animation: fadeIn 0.6s ease 0.2s forwards;
+  }
+  @keyframes fadeIn { to { opacity: 1; } }
+  
+  .goal-label {
+    font-size: 10px; font-weight: 400; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--text-dim); min-width: 50px;
+  }
+  
+  .goal-bar-container { flex: 1; position: relative; }
+  
+  .goal-bar-bg {
+    width: 100%; height: 30px;
+    background: var(--green-faint); border-radius: 6px;
+    overflow: hidden; position: relative;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+  }
+  .goal-bar-bg:hover {
+    border-color: var(--border-hover);
+    box-shadow: 0 0 16px rgba(76,175,80,0.08);
+  }
+  
+  .goal-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, rgba(76,175,80,0.25), rgba(76,175,80,0.45));
+    border-radius: 5px; width: 0;
+    animation: fillBar 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s forwards;
+    position: relative;
+  }
+  .goal-bar-bg:hover .goal-bar-fill {
+    background: linear-gradient(90deg, rgba(76,175,80,0.35), rgba(76,175,80,0.6));
+  }
+  @keyframes fillBar { to { width: 68.5%; } }
+  
+  .goal-bar-fill::after {
+    content: ''; position: absolute; right: 0; top: 0; bottom: 0;
+    width: 2px; background: var(--green); box-shadow: 0 0 8px var(--green);
+  }
+  
+  .goal-bar-text {
+    position: absolute; top: 50%; left: 12px; transform: translateY(-50%);
+    font-size: 11px; font-weight: 500; color: var(--text-bright); z-index: 2;
+  }
+  .goal-bar-pct {
+    position: absolute; top: 50%; right: 12px; transform: translateY(-50%);
+    font-size: 11px; font-weight: 600; color: var(--green); z-index: 2;
+  }
+  
+  /* Cards */
+  .cards {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px; margin-bottom: 14px;
+  }
+  
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 14px;
+    position: relative; overflow: hidden;
+    opacity: 0; transform: translateY(8px); cursor: default;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  }
+  .card:nth-child(1) { animation: cardIn 0.5s ease 0.8s forwards; }
+  .card:nth-child(2) { animation: cardIn 0.5s ease 1.0s forwards; }
+  .card:nth-child(3) { animation: cardIn 0.5s ease 1.2s forwards; }
+  @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
+  
+  .card:hover { transform: translateY(-2px); }
+  .card.income:hover { background: var(--card-hover); border-color: rgba(76,175,80,0.35); box-shadow: 0 4px 20px rgba(76,175,80,0.1); }
+  .card.expense:hover { background: rgba(40,20,22,0.5); border-color: rgba(239,83,80,0.35); box-shadow: 0 4px 20px rgba(239,83,80,0.08); }
+  .card.balance:hover { background: rgba(35,20,22,0.4); border-color: rgba(239,83,80,0.25); box-shadow: 0 4px 20px rgba(239,83,80,0.06); }
+  
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    transition: height 0.3s ease;
+  }
+  .card.income::before { background: linear-gradient(90deg, transparent, var(--green), transparent); }
+  .card.expense::before { background: linear-gradient(90deg, transparent, var(--red), transparent); }
+  .card.balance::before { background: linear-gradient(90deg, transparent, var(--green-dim), transparent); }
+  .card:hover::before { height: 3px; }
+  
+  .card-value { font-size: 22px; font-weight: 600; line-height: 1; margin-bottom: 6px; transition: text-shadow 0.3s ease; }
+  .card.income .card-value { color: var(--green); }
+  .card.expense .card-value { color: var(--red); }
+  .card.balance .card-value { color: var(--green); }
+  .card.income:hover .card-value { text-shadow: 0 0 20px rgba(76,175,80,0.3); }
+  .card.expense:hover .card-value { text-shadow: 0 0 20px rgba(239,83,80,0.3); }
+  
+  .card-label { font-size: 9px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); transition: color 0.3s; }
+  .card:hover .card-label { color: var(--text); }
+  .card-sub { font-size: 9px; color: var(--text-dim); margin-top: 4px; opacity: 0.7; transition: opacity 0.3s; }
+  .card:hover .card-sub { opacity: 1; }
+  
+  /* Expected */
+  .expected {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    opacity: 0; animation: fadeIn 0.5s ease 1.4s forwards; cursor: default;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .expected:hover { background: var(--card-hover); border-color: var(--border-hover); box-shadow: 0 4px 20px rgba(76,175,80,0.08); }
+  
+  .expected-left { display: flex; align-items: center; gap: 10px; }
+  .expected-icon { width: 6px; height: 6px; border-radius: 50%; background: var(--green-dim); animation: pulse 3s ease-in-out infinite; transition: box-shadow 0.3s; }
+  .expected:hover .expected-icon { box-shadow: 0 0 10px rgba(76,175,80,0.4); }
+  .expected-label { font-size: 9px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); transition: color 0.3s; }
+  .expected:hover .expected-label { color: var(--text); }
+  .expected-value { font-size: 18px; font-weight: 500; color: var(--green-dim); transition: color 0.3s, text-shadow 0.3s; }
+  .expected:hover .expected-value { color: var(--green); text-shadow: 0 0 16px rgba(76,175,80,0.25); }
+  .expected-detail { font-size: 9px; color: var(--text-dim); text-align: right; line-height: 1.6; transition: color 0.3s; }
+  .expected:hover .expected-detail { color: var(--text); }
+  
+  .footer {
+    text-align: center; margin-top: 14px; padding-top: 10px;
+    border-top: 1px solid rgba(76,175,80,0.06);
+    font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(200,200,195,0.12);
+  }
+</style>
+</head>
+<body>
+<div class="widget">
+  <div class="header">
+    <div class="header-left">
+      <div class="pulse"></div>
+      <span class="header-title">Финансы</span>
+    </div>
+    <div class="header-right">
+      <div class="header-month">Март 2026</div>
+      <div class="header-updated">обновлено: 20 марта, 19:00</div>
+    </div>
+  </div>
+  
+  <div class="goal-row">
+    <span class="goal-label">Цель</span>
+    <div class="goal-bar-container">
+      <div class="goal-bar-bg">
+        <div class="goal-bar-fill"></div>
+        <span class="goal-bar-text">₽137 000 / ₽200 000</span>
+        <span class="goal-bar-pct">68.5%</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="cards">
+    <div class="card income">
+      <div class="card-value">₽137 000</div>
+      <div class="card-label">Доход</div>
+      <div class="card-sub">8 поступлений</div>
+    </div>
+    <div class="card expense">
+      <div class="card-value">₽82 829</div>
+      <div class="card-label">Расход</div>
+      <div class="card-sub">$390 + 17к бат</div>
+    </div>
+    <div class="card balance">
+      <div class="card-value">+₽54 171</div>
+      <div class="card-label">Баланс</div>
+      <div class="card-sub">март 2026</div>
+    </div>
+  </div>
+  
+  <div class="expected">
+    <div class="expected-left">
+      <div class="expected-icon"></div>
+      <div>
+        <div class="expected-label">Ожидается</div>
+        <div class="expected-value">₽153 192</div>
+      </div>
+    </div>
+    <div class="expected-detail">
+      Дерево — 100 000<br>
+      Costler — 53 192<br>
+      Презентация — закрыт
+    </div>
+  </div>
+  
+  <div class="footer">Agent Universe · Finance · Live</div>
+</div>
+</body>
+</html>
