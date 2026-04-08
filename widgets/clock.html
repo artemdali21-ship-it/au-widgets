@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clock</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Didact+Gothic&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    background: #191919;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  
+  .clock-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .clock-face {
+    position: relative;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at 35% 25%, #2a2a28 0%, #1a1a18 40%, #111110 75%, #0a0a09 100%);
+    box-shadow:
+      0 0 0 3px #b8956a,
+      0 0 0 5px #8b6914,
+      0 0 0 8px #d4a855,
+      0 0 0 10px rgba(180, 150, 100, 0.15),
+      0 4px 30px rgba(0,0,0,0.6),
+      inset 0 1px 3px rgba(212, 168, 85, 0.08);
+  }
+  
+  /* Hour markers - Patrimony style batons */
+  .marker {
+    position: absolute;
+    width: 2px;
+    height: 18px;
+    background: linear-gradient(180deg, #d4a855 0%, #b8956a 100%);
+    top: 14px;
+    left: 50%;
+    transform-origin: 50% 116px;
+    transform: translateX(-50%);
+    border-radius: 1px;
+  }
+  
+  .marker.quarter {
+    width: 2.5px;
+    height: 24px;
+    background: linear-gradient(180deg, #e8c97a 0%, #d4a855 50%, #b8956a 100%);
+    top: 12px;
+    transform-origin: 50% 118px;
+  }
+  
+  /* Minute dots */
+  .dot {
+    position: absolute;
+    width: 1.5px;
+    height: 1.5px;
+    background: rgba(180, 149, 106, 0.5);
+    border-radius: 50%;
+    top: 32px;
+    left: 50%;
+    transform-origin: 50% 98px;
+    transform: translateX(-50%);
+  }
+  
+  /* Brand text */
+  .brand {
+    position: absolute;
+    top: 72px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    pointer-events: none;
+  }
+  
+  .brand-logo {
+    font-family: 'Didact Gothic', sans-serif;
+    font-size: 6px;
+    letter-spacing: 3px;
+    color: rgba(212, 168, 85, 0.6);
+    text-transform: uppercase;
+    margin-bottom: 1px;
+  }
+
+  .brand-cross {
+    font-size: 9px;
+    color: rgba(212, 168, 85, 0.55);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 8.5px;
+    letter-spacing: 2.5px;
+    color: rgba(212, 168, 85, 0.5);
+    text-transform: uppercase;
+  }
+  
+  .brand-city {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 6px;
+    letter-spacing: 2px;
+    color: rgba(180, 149, 106, 0.35);
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+  
+  .swiss {
+    position: absolute;
+    bottom: 48px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 5px;
+    letter-spacing: 2px;
+    color: rgba(180, 149, 106, 0.3);
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+  
+  /* Hands */
+  .hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: 50% 100%;
+    border-radius: 2px;
+  }
+  
+  .hour-hand {
+    width: 3px;
+    height: 70px;
+    background: linear-gradient(0deg, #d4a855 0%, #e8c97a 40%, #d4a855 100%);
+    margin-left: -1.5px;
+    box-shadow: 0 0 4px rgba(212, 168, 85, 0.2);
+    clip-path: polygon(30% 0%, 70% 0%, 55% 100%, 45% 100%);
+  }
+  
+  .minute-hand {
+    width: 2.5px;
+    height: 95px;
+    background: linear-gradient(0deg, #d4a855 0%, #ebd49a 30%, #d4a855 100%);
+    margin-left: -1.25px;
+    box-shadow: 0 0 3px rgba(212, 168, 85, 0.15);
+    clip-path: polygon(25% 0%, 75% 0%, 55% 100%, 45% 100%);
+  }
+  
+  .second-hand {
+    width: 0.8px;
+    height: 100px;
+    background: linear-gradient(0deg, transparent 0%, #c4964a 15%, #c4964a 100%);
+    margin-left: -0.4px;
+    transition: none;
+  }
+  
+  .second-hand::after {
+    content: '';
+    position: absolute;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0.8px;
+    height: 22px;
+    background: #c4964a;
+  }
+  
+  /* Center pin */
+  .center-pin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ebd49a, #d4a855 40%, #8b6914 100%);
+    box-shadow: 0 0 4px rgba(0,0,0,0.4);
+    z-index: 10;
+  }
+  
+  .center-pin::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 3px;
+    height: 3px;
+    margin: -1.5px 0 0 -1.5px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, #1a1a18, #111);
+  }
+
+  /* Subtle glass reflection */
+  .glass {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 50%;
+    background: linear-gradient(
+      155deg,
+      rgba(255,255,255,0.04) 0%,
+      rgba(255,255,255,0.01) 35%,
+      transparent 50%,
+      transparent 100%
+    );
+    pointer-events: none;
+    z-index: 20;
+  }
+
+  /* Date window - Patrimony style */
+  .date-window {
+    position: absolute;
+    top: 50%;
+    right: 42px;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 16px;
+    background: #1e1e1c;
+    border: 0.5px solid rgba(180, 149, 106, 0.25);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 9px;
+    color: rgba(212, 168, 85, 0.7);
+    letter-spacing: 0.5px;
+  }
+
+  /* Time display below */
+  .digital-time {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 14px;
+    letter-spacing: 6px;
+    color: rgba(180, 149, 106, 0.5);
+    text-transform: uppercase;
+  }
+
+  .timezone {
+    font-family: 'Didact Gothic', sans-serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: rgba(180, 149, 106, 0.25);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="clock-container">
+  <div class="clock-face" id="clockFace">
+    <div class="brand">
+      <div class="brand-cross">✦</div>
+      <div class="brand-name">Agent Universe</div>
+      <div class="brand-city">Genève</div>
+    </div>
+    <div class="swiss">SWISS MADE</div>
+    <div class="date-window" id="dateWindow"></div>
+    <div class="hand hour-hand" id="hourHand"></div>
+    <div class="hand minute-hand" id="minuteHand"></div>
+    <div class="hand second-hand" id="secondHand"></div>
+    <div class="center-pin"></div>
+    <div class="glass"></div>
+  </div>
+  <div class="digital-time" id="digitalTime"></div>
+  <div class="timezone" id="timezone"></div>
+</div>
+
+<script>
+  // Create markers
+  const face = document.getElementById('clockFace');
+  
+  // Hour batons
+  for (let i = 0; i < 12; i++) {
+    const marker = document.createElement('div');
+    marker.className = 'marker' + ([0,3,6,9].includes(i) ? ' quarter' : '');
+    marker.style.transform = `translateX(-50%) rotate(${i * 30}deg)`;
+    face.appendChild(marker);
+  }
+  
+  // Minute dots (skip where hour markers are)
+  for (let i = 0; i < 60; i++) {
+    if (i % 5 === 0) continue;
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.style.transform = `translateX(-50%) rotate(${i * 6}deg)`;
+    face.appendChild(dot);
+  }
+  
+  function updateClock() {
+    const now = new Date();
+    const h = now.getHours() % 12;
+    const m = now.getMinutes();
+    const s = now.getSeconds();
+    const ms = now.getMilliseconds();
+    
+    const secDeg = (s + ms / 1000) * 6;
+    const minDeg = (m + s / 60) * 6;
+    const hourDeg = (h + m / 60) * 30;
+    
+    document.getElementById('secondHand').style.transform = `translateX(-50%) rotate(${secDeg}deg)`;
+    document.getElementById('minuteHand').style.transform = `translateX(-50%) rotate(${minDeg}deg)`;
+    document.getElementById('hourHand').style.transform = `translateX(-50%) rotate(${hourDeg}deg)`;
+    
+    // Date
+    document.getElementById('dateWindow').textContent = now.getDate();
+    
+    // Digital time
+    const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('digitalTime').textContent = timeStr;
+    
+    // Timezone
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.getElementById('timezone').textContent = tz.split('/').pop().replace('_', ' ');
+    
+    requestAnimationFrame(updateClock);
+  }
+  
+  updateClock();
+</script>
+</body>
+</html>
