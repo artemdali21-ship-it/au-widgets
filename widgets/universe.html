@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Universe</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Didact+Gothic&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    background: #191919;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: 'Didact Gothic', sans-serif;
+  }
+  
+  .universe {
+    position: relative;
+    width: 420px;
+    height: 420px;
+  }
+  
+  /* Center core */
+  .core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #2a2520 0%, #1a1815 60%, #111 100%);
+    border: 1.5px solid rgba(212, 168, 85, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    cursor: default;
+    box-shadow: 0 0 30px rgba(212, 168, 85, 0.08);
+  }
+  
+  .core-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(212, 168, 85, 0.6);
+    text-transform: uppercase;
+  }
+  
+  .core-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: rgba(212, 168, 85, 0.8);
+    line-height: 1;
+  }
+  
+  .core-sub {
+    font-family: 'Didact Gothic', sans-serif;
+    font-size: 6px;
+    letter-spacing: 2px;
+    color: rgba(180, 149, 106, 0.3);
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  
+  /* Orbit rings */
+  .orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.03);
+  }
+  
+  .orbit-1 { width: 180px; height: 180px; transform: translate(-50%, -50%); }
+  .orbit-2 { width: 280px; height: 280px; transform: translate(-50%, -50%); }
+  .orbit-3 { width: 370px; height: 370px; transform: translate(-50%, -50%); }
+  
+  /* Ring nodes */
+  .ring-node {
+    position: absolute;
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 15;
+    text-decoration: none;
+  }
+  
+  .ring-node:hover {
+    transform: scale(1.15);
+    z-index: 25;
+  }
+  
+  .ring-node:hover .node-glow {
+    opacity: 1;
+  }
+  
+  .node-bg {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, var(--node-color-light) 0%, var(--node-color) 40%, var(--node-color-dark) 100%);
+    border: 1.5px solid var(--node-border);
+    opacity: 0.9;
+  }
+  
+  .node-glow {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--node-color) 0%, transparent 70%);
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+  }
+  
+  .node-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+  
+  .node-name {
+    font-family: 'Didact Gothic', sans-serif;
+    font-size: 6px;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+    margin-top: 1px;
+  }
+  
+  /* Positioning each ring */
+  /* K1 - top (brown) */
+  .k1 {
+    --node-color: #8B6914;
+    --node-color-light: #B8956A;
+    --node-color-dark: #5A4210;
+    --node-border: rgba(184, 149, 106, 0.5);
+    top: 22px; left: 50%; transform: translateX(-50%);
+  }
+  
+  /* K2 - top right (green) */
+  .k2 {
+    --node-color: #2E7D32;
+    --node-color-light: #4CAF50;
+    --node-color-dark: #1B5E20;
+    --node-border: rgba(76, 175, 80, 0.5);
+    top: 80px; right: 38px;
+  }
+  
+  /* K3 - bottom right (blue) */
+  .k3 {
+    --node-color: #1565C0;
+    --node-color-light: #42A5F5;
+    --node-color-dark: #0D47A1;
+    --node-border: rgba(66, 165, 245, 0.5);
+    bottom: 65px; right: 18px;
+  }
+  
+  /* K4 - bottom left (red/purple) */
+  .k4 {
+    --node-color: #C62828;
+    --node-color-light: #EF5350;
+    --node-color-dark: #8E0000;
+    --node-border: rgba(239, 83, 80, 0.5);
+    bottom: 65px; left: 18px;
+  }
+  
+  /* K5 - top left (orange) */
+  .k5 {
+    --node-color: #E65100;
+    --node-color-light: #FF9800;
+    --node-color-dark: #BF360C;
+    --node-border: rgba(255, 152, 0, 0.5);
+    top: 80px; left: 38px;
+  }
+  
+  /* СИСТЕМА - bottom (gray) */
+  .sys {
+    --node-color: #455A64;
+    --node-color-light: #78909C;
+    --node-color-dark: #263238;
+    --node-border: rgba(120, 144, 156, 0.5);
+    bottom: 15px; left: 50%; transform: translateX(-50%);
+  }
+  
+  /* Connection lines */
+  .connections {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 5;
+    pointer-events: none;
+  }
+  
+  .connections line {
+    stroke: rgba(212, 168, 85, 0.06);
+    stroke-width: 0.5;
+  }
+  
+  /* Ambient particles */
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: rgba(212, 168, 85, 0.15);
+    animation: float linear infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes float {
+    0% { transform: translateY(0) translateX(0); opacity: 0; }
+    20% { opacity: 0.3; }
+    80% { opacity: 0.1; }
+    100% { transform: translateY(-80px) translateX(20px); opacity: 0; }
+  }
+  
+  /* Title */
+  .title {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: rgba(180, 149, 106, 0.3);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  
+  /* Tooltip */
+  .tooltip {
+    position: absolute;
+    background: rgba(20, 20, 18, 0.95);
+    border: 1px solid rgba(212, 168, 85, 0.2);
+    border-radius: 8px;
+    padding: 8px 14px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 30;
+    min-width: 120px;
+  }
+  
+  .tooltip.visible { opacity: 1; }
+  
+  .tooltip-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(212, 168, 85, 0.8);
+  }
+  
+  .tooltip-desc {
+    font-family: 'Didact Gothic', sans-serif;
+    font-size: 9px;
+    color: rgba(180, 149, 106, 0.5);
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+<div class="universe" id="universe">
+  <!-- Orbit rings -->
+  <div class="orbit orbit-1"></div>
+  <div class="orbit orbit-2"></div>
+  <div class="orbit orbit-3"></div>
+  
+  <!-- Connection lines -->
+  <svg class="connections" viewBox="0 0 420 420">
+    <line x1="210" y1="53" x2="210" y2="210"/>
+    <line x1="350" y1="111" x2="210" y2="210"/>
+    <line x1="370" y1="324" x2="210" y2="210"/>
+    <line x1="50" y1="324" x2="210" y2="210"/>
+    <line x1="69" y1="111" x2="210" y2="210"/>
+    <line x1="210" y1="374" x2="210" y2="210"/>
+  </svg>
+  
+  <!-- Center core -->
+  <div class="core">
+    <div class="core-label">Rings</div>
+    <div class="core-number">5</div>
+    <div class="core-sub">+ система</div>
+  </div>
+  
+  <!-- K1 -->
+  <a class="ring-node k1" href="https://notion.so/31063b02a592819c9c87c0361d70e054" target="_top"
+     data-title="К1 · АРТЁМ" data-desc="Личное. Задачи, цели, финансы">
+    <div class="node-bg"></div>
+    <div class="node-glow"></div>
+    <span class="node-label">K1</span>
+    <span class="node-name">Артём</span>
+  </a>
+  
+  <!-- K2 -->
+  <a class="ring-node k2" href="https://notion.so/a8d63b02a59283bb9e9c0153c534c6ea" target="_top"
+     data-title="К2 · ДНК" data-desc="Стандарты, архитектуры, принципы">
+    <div class="node-bg"></div>
+    <div class="node-glow"></div>
+    <span class="node-label">K2</span>
+    <span class="node-name">ДНК</span>
+  </a>
+  
+  <!-- K3 -->
+  <a class="ring-node k3" href="https://notion.so/31063b02a59281fc86c4ed56e11b43e7" target="_top"
+     data-title="К3 · ЗАВОДЫ" data-desc="Фабрики, агенты, production">
+    <div class="node-bg"></div>
+    <div class="node-glow"></div>
+    <span class="node-label">K3</span>
+    <span class="node-name">Заводы</span>
+  </a>
+  
+  <!-- K4 -->
+  <a class="ring-node k4" href="https://notion.so/31063b02a5928100b1eae73000006f8e" target="_top"
+     data-title="К4 · СИНДИКАТ" data-desc="Triumvirate, активные агенты">
+    <div class="node-bg"></div>
+    <div class="node-glow"></div>
+    <span class="node-label">K4</span>
+    <span class="node-name">Синдикат</span>
+  </a>
+  
+  <!-- K5 -->
+  <a class="ring-node k5" href="https://notion.so/31063b02a592817cb648e194084846a5" target="_top"
+     data-title="К5 · РЫНОК" data-desc="Продукты, клиенты, revenue">
+    <div class="node-bg"></div>
+    <div class="node-glow"></div>
+    <span class="node-label">K5</span>
+    <span class="node-name">Рынок</span>
+  </a>
+  
+  <!-- СИСТЕМА -->
+  <a class="ring-node sys" href="https://notion.so/31063b02a5928139a345ea9025bda161" target="_top"
+     data-title="СИСТЕМА" data-desc="Инфраструктура, мониторинг, реестры">
+    <div class="node-bg"></div>
+    <div class="node-glow"></div>
+    <span class="node-label">SYS</span>
+    <span class="node-name">Система</span>
+  </a>
+  
+  <!-- Ambient particles -->
+  <div class="particle" style="top:30%;left:20%;animation-duration:6s;animation-delay:0s"></div>
+  <div class="particle" style="top:60%;left:70%;animation-duration:8s;animation-delay:1s"></div>
+  <div class="particle" style="top:45%;left:45%;animation-duration:7s;animation-delay:2s"></div>
+  <div class="particle" style="top:70%;left:30%;animation-duration:5s;animation-delay:3s"></div>
+  <div class="particle" style="top:20%;left:65%;animation-duration:9s;animation-delay:0.5s"></div>
+  
+  <div class="title">Agent Universe</div>
+  
+  <!-- Tooltip -->
+  <div class="tooltip" id="tooltip">
+    <div class="tooltip-title" id="ttTitle"></div>
+    <div class="tooltip-desc" id="ttDesc"></div>
+  </div>
+</div>
+
+<script>
+  const tooltip = document.getElementById('tooltip');
+  const ttTitle = document.getElementById('ttTitle');
+  const ttDesc = document.getElementById('ttDesc');
+  
+  document.querySelectorAll('.ring-node').forEach(node => {
+    node.addEventListener('mouseenter', e => {
+      ttTitle.textContent = node.dataset.title;
+      ttDesc.textContent = node.dataset.desc;
+      tooltip.classList.add('visible');
+      
+      const rect = node.getBoundingClientRect();
+      const uRect = document.getElementById('universe').getBoundingClientRect();
+      tooltip.style.left = (rect.left - uRect.left + rect.width/2 - 60) + 'px';
+      tooltip.style.top = (rect.top - uRect.top - 50) + 'px';
+    });
+    
+    node.addEventListener('mouseleave', () => {
+      tooltip.classList.remove('visible');
+    });
+  });
+</script>
+</body>
+</html>
