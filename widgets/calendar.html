@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Календарь</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Didact+Gothic&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#191919;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'Didact Gothic',sans-serif;padding:24px;overflow:hidden}
+  .cal{
+    display:flex;align-items:center;justify-content:center;gap:44px;
+    width:100%;padding:36px 52px;border-radius:14px;
+    border:1px solid rgba(212,168,85,0.1);background:rgba(30,28,24,0.6);
+    transition:all 0.4s ease;cursor:default;
+  }
+  .cal:hover{
+    border-color:rgba(212,168,85,0.3);
+    background:rgba(38,34,26,0.75);
+    box-shadow:0 0 40px rgba(212,168,85,0.05),inset 0 0 30px rgba(212,168,85,0.02);
+  }
+  .cal-day{font-family:'Cormorant Garamond',serif;font-size:76px;font-weight:400;color:rgba(212,168,85,0.8);line-height:1;min-width:90px;text-align:center;transition:all 0.4s}
+  .cal:hover .cal-day{color:rgba(212,168,85,0.95);text-shadow:0 0 20px rgba(212,168,85,0.1)}
+  .cal-divider{width:1px;height:60px;background:rgba(212,168,85,0.1);transition:background 0.4s}
+  .cal:hover .cal-divider{background:rgba(212,168,85,0.25)}
+  .cal-info{display:flex;flex-direction:column;gap:5px}
+  .cal-weekday{font-family:'Cormorant Garamond',serif;font-size:24px;letter-spacing:6px;color:rgba(212,168,85,0.45);text-transform:uppercase;transition:color 0.4s}
+  .cal:hover .cal-weekday{color:rgba(212,168,85,0.65)}
+  .cal-month{font-size:12px;letter-spacing:3px;color:rgba(180,175,165,0.25);text-transform:uppercase;transition:color 0.4s}
+  .cal:hover .cal-month{color:rgba(180,175,165,0.4)}
+  .cal-label{
+    margin-left:auto;font-size:10px;letter-spacing:2.5px;
+    color:rgba(180,175,165,0.12);text-transform:uppercase;
+    border:1px solid rgba(212,168,85,0.05);border-radius:6px;
+    padding:10px 18px;transition:all 0.4s;
+  }
+  .cal:hover .cal-label{
+    border-color:rgba(212,168,85,0.25);
+    color:rgba(212,168,85,0.45);
+    background:rgba(212,168,85,0.03);
+    box-shadow:0 0 12px rgba(212,168,85,0.04);
+  }
+</style>
+</head>
+<body>
+<div class="cal">
+  <div class="cal-day" id="day"></div>
+  <div class="cal-divider"></div>
+  <div class="cal-info">
+    <div class="cal-weekday" id="weekday"></div>
+    <div class="cal-month" id="month"></div>
+  </div>
+  <div class="cal-label">открыть календарь →</div>
+</div>
+<script>
+  const months=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  const days=['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
+  const n=new Date();
+  document.getElementById('month').textContent=months[n.getMonth()]+' '+n.getFullYear();
+  document.getElementById('day').textContent=n.getDate();
+  document.getElementById('weekday').textContent=days[n.getDay()];
+</script>
+</body>
+</html>
