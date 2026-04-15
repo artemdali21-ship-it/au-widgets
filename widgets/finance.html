@@ -69,7 +69,6 @@
   .header-month { font-size: 10px; color: var(--text-dim); letter-spacing: 1px; }
   .header-updated { font-size: 8px; color: rgba(200,200,195,0.2); letter-spacing: 1px; margin-top: 2px; }
   
-  /* Goal bar */
   .goal-row {
     display: flex; align-items: center; gap: 16px;
     margin-bottom: 18px; opacity: 0;
@@ -107,7 +106,7 @@
   .goal-bar-bg:hover .goal-bar-fill {
     background: linear-gradient(90deg, rgba(76,175,80,0.35), rgba(76,175,80,0.6));
   }
-  @keyframes fillBar { to { width: 68.5%; } }
+  @keyframes fillBar { to { width: 60.3%; } }
   
   .goal-bar-fill::after {
     content: ''; position: absolute; right: 0; top: 0; bottom: 0;
@@ -123,7 +122,6 @@
     font-size: 11px; font-weight: 600; color: var(--green); z-index: 2;
   }
   
-  /* Cards */
   .cards {
     display: grid; grid-template-columns: 1fr 1fr 1fr;
     gap: 12px; margin-bottom: 14px;
@@ -144,7 +142,7 @@
   .card:hover { transform: translateY(-2px); }
   .card.income:hover { background: var(--card-hover); border-color: rgba(76,175,80,0.35); box-shadow: 0 4px 20px rgba(76,175,80,0.1); }
   .card.expense:hover { background: rgba(40,20,22,0.5); border-color: rgba(239,83,80,0.35); box-shadow: 0 4px 20px rgba(239,83,80,0.08); }
-  .card.balance:hover { background: rgba(35,20,22,0.4); border-color: rgba(239,83,80,0.25); box-shadow: 0 4px 20px rgba(239,83,80,0.06); }
+  .card.balance:hover { background: rgba(20,35,22,0.4); border-color: rgba(76,175,80,0.25); box-shadow: 0 4px 20px rgba(76,175,80,0.06); }
   
   .card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
@@ -167,7 +165,6 @@
   .card-sub { font-size: 9px; color: var(--text-dim); margin-top: 4px; opacity: 0.7; transition: opacity 0.3s; }
   .card:hover .card-sub { opacity: 1; }
   
-  /* Expected */
   .expected {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 10px; padding: 14px 16px;
@@ -203,8 +200,8 @@
       <span class="header-title">Финансы</span>
     </div>
     <div class="header-right">
-      <div class="header-month">Март 2026</div>
-      <div class="header-updated">обновлено: 20 марта, 19:00</div>
+      <div class="header-month">Апрель 2026</div>
+      <div class="header-updated">обновлено: 15 апреля, 20:00</div>
     </div>
   </div>
   
@@ -213,27 +210,27 @@
     <div class="goal-bar-container">
       <div class="goal-bar-bg">
         <div class="goal-bar-fill"></div>
-        <span class="goal-bar-text">₽137 000 / ₽200 000</span>
-        <span class="goal-bar-pct">68.5%</span>
+        <span class="goal-bar-text">$7 230 / $12 000</span>
+        <span class="goal-bar-pct">60.3%</span>
       </div>
     </div>
   </div>
   
   <div class="cards">
     <div class="card income">
-      <div class="card-value">₽137 000</div>
+      <div class="card-value">$7 230</div>
       <div class="card-label">Доход</div>
-      <div class="card-sub">8 поступлений</div>
+      <div class="card-sub">апрель 2026</div>
     </div>
     <div class="card expense">
-      <div class="card-value">₽82 829</div>
+      <div class="card-value">$3 274</div>
       <div class="card-label">Расход</div>
-      <div class="card-sub">$390 + 17к бат</div>
+      <div class="card-sub">апрель 2026</div>
     </div>
     <div class="card balance">
-      <div class="card-value">+₽54 171</div>
+      <div class="card-value">+$3 956</div>
       <div class="card-label">Баланс</div>
-      <div class="card-sub">март 2026</div>
+      <div class="card-sub">апрель 2026</div>
     </div>
   </div>
   
@@ -242,13 +239,13 @@
       <div class="expected-icon"></div>
       <div>
         <div class="expected-label">Ожидается</div>
-        <div class="expected-value">₽153 192</div>
+        <div class="expected-value">$4 770</div>
       </div>
     </div>
     <div class="expected-detail">
-      Дерево — 100 000<br>
-      Costler — 53 192<br>
-      Презентация — закрыт
+      AI-Systems — $2 500<br>
+      Notion — $1 200<br>
+      WebSite — $1 070
     </div>
   </div>
   
