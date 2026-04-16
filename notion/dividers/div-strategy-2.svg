@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 60" width="1400" height="60">
+  <defs>
+    <linearGradient id="hgrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#2D0A6E" stop-opacity="0"/>
+      <stop offset="7%"   stop-color="#2D0A6E" stop-opacity="1"/>
+      <stop offset="28%"  stop-color="#7B1FA8" stop-opacity="1"/>
+      <stop offset="50%"  stop-color="#C9A44A" stop-opacity="1"/>
+      <stop offset="72%"  stop-color="#7B1FA8" stop-opacity="1"/>
+      <stop offset="93%"  stop-color="#2D0A6E" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#2D0A6E" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="vmask" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="white" stop-opacity="0"/>
+      <stop offset="20%"  stop-color="white" stop-opacity="1"/>
+      <stop offset="80%"  stop-color="white" stop-opacity="1"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="vfade">
+      <rect width="1400" height="60" fill="url(#vmask)"/>
+    </mask>
+    <linearGradient id="hglow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#C9A44A" stop-opacity="0"/>
+      <stop offset="10%"  stop-color="#7B1FA8" stop-opacity="0.3"/>
+      <stop offset="50%"  stop-color="#C9A44A" stop-opacity="0.5"/>
+      <stop offset="90%"  stop-color="#7B1FA8" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#C9A44A" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="vmask2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="white" stop-opacity="0"/>
+      <stop offset="50%"  stop-color="white" stop-opacity="1"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="vfade2">
+      <rect width="1400" height="60" fill="url(#vmask2)"/>
+    </mask>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="60" fill="url(#hglow)" mask="url(#vfade2)"/>
+  <rect x="0" y="10" width="1400" height="40" fill="url(#hgrad)" mask="url(#vfade)"/>
+</svg>
