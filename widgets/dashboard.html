@@ -26,22 +26,27 @@
   .lbl{font-size:10px;letter-spacing:2.5px;color:rgba(180,175,165,0.35);text-transform:uppercase;margin-top:8px}
   .sub{font-size:9px;color:rgba(180,175,165,0.2);margin-top:4px;letter-spacing:0.5px}
   .src{text-align:right;font-size:8px;letter-spacing:1.5px;color:rgba(180,175,165,0.15);text-transform:uppercase}
+  .stale-badge{display:none;font-size:8px;letter-spacing:1px;color:#FF9800;text-transform:uppercase;margin-top:2px}
+  .stale .dot.green{background:#9E9E9E;color:#9E9E9E;box-shadow:0 0 6px #9E9E9E}
+  .stale .stale-badge{display:block}
 </style>
 </head>
-<body>
+<body data-generated-at="2026-07-10T15:20:59.917Z" data-staleness-budget-hours="24">
 <div class="dashboard">
   <div class="top">
-    <div class="card big">
+    <div class="card big" id="card-readiness">
       <div class="dot green"></div>
       <div class="num">91<span class="unit">%</span></div>
-      <div class="lbl">Готовность системы</div>
-      <div class="sub">121 / 133 активных · 2 overdue</div>
+      <div class="lbl">Operational Completion</div>
+      <div class="sub">121 / 133 eligible tasks</div>
+      <div class="stale-badge">STALE</div>
     </div>
-    <div class="card big">
+    <div class="card big" id="card-health">
       <div class="dot red"></div>
       <div class="num">22<span class="unit">%</span></div>
-      <div class="lbl">Здоровье агентов</div>
-      <div class="sub">55 / 255 активны · 47 / 53 workflows OK</div>
+      <div class="lbl">Agent Health</div>
+      <div class="sub">55 / 255 agents active · 67 / 76 workflows OK</div>
+      <div class="stale-badge">STALE (Navigator scan cache)</div>
     </div>
   </div>
   <div class="bottom">
@@ -64,7 +69,27 @@
       <div class="sub">NAV · PRT · STW · SNT healthy</div>
     </div>
   </div>
-  <div class="src">Срез: 10.07.2026 · Navigator v5.0 · auto by Steward</div>
+  <div class="src" id="last-refresh-line">Last refreshed: 2026-07-10T15:20:59.917Z · Navigator v5.0 · auto by Steward</div>
 </div>
+<script>
+(function(){
+  var body = document.body;
+  var genAt = body.getAttribute('data-generated-at');
+  var budgetH = parseFloat(body.getAttribute('data-staleness-budget-hours')) || 24;
+  if (!genAt) return;
+  var ageH = (Date.now() - new Date(genAt).getTime()) / 3600000;
+  var isStale = ageH > budgetH;
+  var line = document.getElementById('last-refresh-line');
+  if (line) {
+    line.textContent = (isStale ? 'STALE — ' : '') + 'Last refreshed: ' + genAt + ' (' + ageH.toFixed(1) + 'h ago) · Navigator v5.0 · auto by Steward';
+  }
+  if (isStale) {
+    ['card-readiness','card-health'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.classList.add('stale');
+    });
+  }
+})();
+</script>
 </body>
 </html>
